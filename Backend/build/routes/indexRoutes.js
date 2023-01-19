@@ -4,7 +4,7 @@ var express_1 = require("express");
 var indexController_1 = require("../controllers/indexController");
 var IndexRoutes = /** @class */ (function () {
     function IndexRoutes() {
-        this.router = express_1.Router();
+        this.router = (0, express_1.Router)();
         this.config();
     }
     IndexRoutes.prototype.config = function () {

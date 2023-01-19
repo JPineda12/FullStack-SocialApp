@@ -86,7 +86,7 @@ var ChatController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, idUsuario1 = _a.idUsuario1, idUsuario2 = _a.idUsuario2;
-                        sqlRoom = "SELECT idSala FROM Sala_Chat\n    WHERE idUsuario1 = " + idUsuario1 + "\n    AND idUsuario2 = " + idUsuario2 + "\n    UNION\n    SELECT idSala FROM Sala_Chat\n    WHERE idUsuario1 = " + idUsuario2 + "\n    AND idUsuario2 = " + idUsuario1;
+                        sqlRoom = "SELECT idSala FROM Sala_Chat\n    WHERE idUsuario1 = ".concat(idUsuario1, "\n    AND idUsuario2 = ").concat(idUsuario2, "\n    UNION\n    SELECT idSala FROM Sala_Chat\n    WHERE idUsuario1 = ").concat(idUsuario2, "\n    AND idUsuario2 = ").concat(idUsuario1);
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 12, , 13]);
@@ -94,7 +94,7 @@ var ChatController = /** @class */ (function () {
                     case 2:
                         result = _b.sent();
                         if (!(result.length > 0)) return [3 /*break*/, 7];
-                        sql = "SELECT M.idMensaje, M.texto, M.Usuario_idUsuario, M.Sala_idChat as idChat\n        FROM Mensaje M\n        WHERE M.Sala_idChat = " + result[0].idSala + "\n        ORDER BY M.idMensaje ASC";
+                        sql = "SELECT M.idMensaje, M.texto, M.Usuario_idUsuario, M.Sala_idChat as idChat\n        FROM Mensaje M\n        WHERE M.Sala_idChat = ".concat(result[0].idSala, "\n        ORDER BY M.idMensaje ASC");
                         _b.label = 3;
                     case 3:
                         _b.trys.push([3, 5, , 6]);

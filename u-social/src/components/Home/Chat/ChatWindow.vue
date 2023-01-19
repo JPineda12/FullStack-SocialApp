@@ -60,7 +60,7 @@
 
 <script>
 import { io } from "socket.io-client";
-const socket = io("https://3.144.211.199:443");
+const socket = io("http://localhost:3010");
 export default {
   name: "ChatWindow",
   emits: ["close"],

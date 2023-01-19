@@ -258,7 +258,6 @@ export default {
       };
       this.axios.post("/login-face", user).then((response) => {
         this.LoginValues.password = "";
-        console.log("AVER: ", response);
         if (response.data.Comparacion.length > 0) {
           if (response.data.Comparacion[0].Similarity >= 80) {
             let usuario = {

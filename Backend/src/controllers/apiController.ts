@@ -325,7 +325,7 @@ class ApiController {
       "posts-pictures/" + req.body.nickname + "-pp" + "-" + uuidv4() + ".jpg";
     let buff = Buffer.from(imagen, "base64");
     const params = {
-      Bucket: "p2-bucket-semi1",
+      Bucket: aws_keys.s3.bucketName || '',
       Key: nombrei,
       Body: buff,
       ContentType: "image",

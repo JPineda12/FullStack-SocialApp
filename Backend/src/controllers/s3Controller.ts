@@ -10,7 +10,7 @@ class S3Controller {
     let buff = Buffer.from(base64Foto, "base64");
 
     const params = {
-      Bucket: "archivos-29-p1",
+      Bucket: aws_keys.s3.bucketName || '',
       Key: nombrei,
       Body: buff,
       ContentType: "image",
@@ -28,7 +28,7 @@ class S3Controller {
     //se convierte la base64 a bytes
     let buff = Buffer.from(pdf, "base64");
     const params = {
-      Bucket: "archivos-29-p1",
+      Bucket: aws_keys.s3.bucketName || '',
       Key: nombrei,
       Body: buff,
       ACL: "public-read",

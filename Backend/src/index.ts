@@ -1,6 +1,7 @@
 import express, { Application } from "express";
 import morgan from "morgan";
 import cors from "cors";
+import * as dotenv from 'dotenv';
 import indexRoutes from "./routes/indexRoutes";
 import apiRoutes from "./routes/apiRoutes";
 import s3Routes from "./routes/s3Routes";
@@ -20,23 +21,23 @@ class IndexServer {
   private options: any;
   constructor() {
     this.app = express();
-    this.port = process.env.PORT || IndexServer.PORT;
     this.config();
     this.routes();
+    this.port = process.env.PORT || IndexServer.PORT;
     this.server = new http.Server(this.app);
     this.io = new socketio.Server(this.server);
-    this.options = {
+    /*this.options = {
       key: fs.readFileSync('certs/example.com+5-key.pem'),
       cert: fs.readFileSync('certs/example.com+5.pem')
-    }
+    }*/
   }
 
   listen() {
     this.start();
-    const secureServ = https.createServer(this.options, this.app).listen(443, () => {
+    /*const secureServ = https.createServer(this.options, this.app).listen(443, () => {
       console.log("Running HTTPS server on port 443");
-    });
-    this.io = new socketio.Server(secureServ);
+    });*/
+    this.io = new socketio.Server(this.server);
     this.io.on("connection", (socket: socketio.Socket) => {
       console.log("A user with ID: " + socket.id + " connected");
 
@@ -53,14 +54,11 @@ class IndexServer {
         const messageData = await chatController.newMessage(data);
         socket.broadcast.emit("chat-message", message);
       });
-
-      socket.on("prueba", async (mensaje) => {
-        socket.broadcast.emit("PRUEBA EMIT");
-      });
     });
   }
 
   config(): void {
+    dotenv.config();
     this.app.set("port", process.env.PORT || 3000);
     this.app.use(morgan("dev"));
     this.app.use(cors());

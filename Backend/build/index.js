@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -62,34 +66,33 @@ exports.indexServer = void 0;
 var express_1 = __importDefault(require("express"));
 var morgan_1 = __importDefault(require("morgan"));
 var cors_1 = __importDefault(require("cors"));
+var dotenv = __importStar(require("dotenv"));
 var indexRoutes_1 = __importDefault(require("./routes/indexRoutes"));
 var apiRoutes_1 = __importDefault(require("./routes/apiRoutes"));
 var s3Routes_1 = __importDefault(require("./routes/s3Routes"));
 var socketio = __importStar(require("socket.io"));
 var http = require("http");
 var chatController_1 = require("./controllers/chatController");
-var https = require("https");
-var fs = require("fs");
 var IndexServer = /** @class */ (function () {
     function IndexServer() {
-        this.app = express_1.default();
-        this.port = process.env.PORT || IndexServer.PORT;
+        this.app = (0, express_1.default)();
         this.config();
         this.routes();
+        this.port = process.env.PORT || IndexServer.PORT;
         this.server = new http.Server(this.app);
         this.io = new socketio.Server(this.server);
-        this.options = {
-            key: fs.readFileSync('certs/example.com+5-key.pem'),
-            cert: fs.readFileSync('certs/example.com+5.pem')
-        };
+        /*this.options = {
+          key: fs.readFileSync('certs/example.com+5-key.pem'),
+          cert: fs.readFileSync('certs/example.com+5.pem')
+        }*/
     }
     IndexServer.prototype.listen = function () {
         var _this = this;
         this.start();
-        var secureServ = https.createServer(this.options, this.app).listen(443, function () {
-            console.log("Running HTTPS server on port 443");
-        });
-        this.io = new socketio.Server(secureServ);
+        /*const secureServ = https.createServer(this.options, this.app).listen(443, () => {
+          console.log("Running HTTPS server on port 443");
+        });*/
+        this.io = new socketio.Server(this.server);
         this.io.on("connection", function (socket) {
             console.log("A user with ID: " + socket.id + " connected");
             socket.on("disconnect", function () {
@@ -113,18 +116,13 @@ var IndexServer = /** @class */ (function () {
                     }
                 });
             }); });
-            socket.on("prueba", function (mensaje) { return __awaiter(_this, void 0, void 0, function () {
-                return __generator(this, function (_a) {
-                    socket.broadcast.emit("PRUEBA EMIT");
-                    return [2 /*return*/];
-                });
-            }); });
         });
     };
     IndexServer.prototype.config = function () {
+        dotenv.config();
         this.app.set("port", process.env.PORT || 3000);
-        this.app.use(morgan_1.default("dev"));
-        this.app.use(cors_1.default());
+        this.app.use((0, morgan_1.default)("dev"));
+        this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json({ limit: "50mb" }));
         this.app.use(express_1.default.urlencoded({ limit: "50mb", extended: false }));
     };

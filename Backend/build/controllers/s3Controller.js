@@ -13,10 +13,10 @@ var S3Controller = /** @class */ (function () {
     }
     S3Controller.prototype.uploadFoto = function (req, res) {
         var _a = req.body, nombre = _a.nombre, base64Foto = _a.base64Foto;
-        var nombrei = "imagenes/" + nombre + "-" + uuid_1.v4() + ".jpg";
+        var nombrei = "imagenes/" + nombre + "-" + (0, uuid_1.v4)() + ".jpg";
         var buff = Buffer.from(base64Foto, "base64");
         var params = {
-            Bucket: "archivos-29-p1",
+            Bucket: creds_1.default.s3.bucketName || '',
             Key: nombrei,
             Body: buff,
             ContentType: "image",
@@ -29,11 +29,11 @@ var S3Controller = /** @class */ (function () {
         var nombre = req.body.nombre;
         var pdf = req.body.pdf; //base 64
         //carpeta y nombre que quieran darle al pdf
-        var nombrei = "archivos/" + nombre + "-" + uuid_1.v4() + ".pdf";
+        var nombrei = "archivos/" + nombre + "-" + (0, uuid_1.v4)() + ".pdf";
         //se convierte la base64 a bytes
         var buff = Buffer.from(pdf, "base64");
         var params = {
-            Bucket: "archivos-29-p1",
+            Bucket: creds_1.default.s3.bucketName || '',
             Key: nombrei,
             Body: buff,
             ACL: "public-read",

@@ -6,7 +6,7 @@ var userController_1 = require("../controllers/userController");
 var chatController_1 = require("../controllers/chatController");
 var ApiRoutes = /** @class */ (function () {
     function ApiRoutes() {
-        this.router = express_1.Router();
+        this.router = (0, express_1.Router)();
         this.config();
     }
     ApiRoutes.prototype.config = function () {

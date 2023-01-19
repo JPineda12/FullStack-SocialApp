@@ -1,33 +1,52 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var dotenv = __importStar(require("dotenv"));
+dotenv.config();
 var aws_keys = {
     s3: {
-        region: 'us-east-2',
-        accessKeyId: "",
-        secretAccessKey: "",
+        region: process.env.S3_REGION,
+        accessKeyId: process.env.S3_ACCESSKEY,
+        secretAccessKey: process.env.S3_SECRETKEY,
+        bucketName: process.env.S3_BUCKETNAME
         //apiVersion: '2006-03-01',
     },
     //CLOUD CREDS
     cognito: {
-        UserPoolId: '',
-        ClientId: ''
+        UserPoolId: process.env.COGNITO_USERPOOLID,
+        ClientId: process.env.COGNITO_CLIENTID
     },
-    /*
-   //TEST PURPOSES COGNITO
-    cognito:{
-        UserPoolId: 'us-eat-2_8Fiadroi0',
-        ClientId: '7hcj7ir'
-    },
-    */
     rekognition: {
-        region: 'us-east-2',
-        accessKeyId: "",
-        secretAccessKey: ""
+        region: process.env.REK_REGION,
+        accessKeyId: process.env.REK_ACCESSKEY,
+        secretAccessKey: process.env.REK_SECRETKEY
     },
     translate: {
-        region: 'us-east-2',
-        accessKeyId: "",
-        secretAccessKey: ""
+        region: process.env.TRANSLATE_REGION,
+        accessKeyId: process.env.TRANSLATE_ACCESSKEY,
+        secretAccessKey: process.env.TRANSLATE_SECRETKEY
     },
 };
 exports.default = aws_keys;

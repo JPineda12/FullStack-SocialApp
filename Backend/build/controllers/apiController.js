@@ -356,7 +356,7 @@ var ApiController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         iduser = req.params.iduser;
-                        sql = "SELECT u.idUsuario, u.username, u.img_url, e.estado\n    FROM Usuario u, Solicitud_Amistad s, Estado_Amistad e\n    WHERE s.idAmigo1 = " + iduser + "\n    AND s.idEstado <> 1\n    AND s.idAmigo2 = u.idUsuario\n    AND e.idEstadoAmistad = s.idEstado\n    UNION\n    SELECT u.idUsuario, u.username, u.img_url, 'NO-FRIENDS'\n    FROM Usuario u\n    WHERE u.idUsuario <> " + iduser + "\n    AND u.idUsuario NOT IN (SELECT s2.idAmigo1\n                            FROM Solicitud_Amistad s2\n                            WHERE s2.idAmigo2 =" + iduser + ");";
+                        sql = "SELECT u.idUsuario, u.username, u.img_url, e.estado\n    FROM Usuario u, Solicitud_Amistad s, Estado_Amistad e\n    WHERE s.idAmigo1 = ".concat(iduser, "\n    AND s.idEstado <> 1\n    AND s.idAmigo2 = u.idUsuario\n    AND e.idEstadoAmistad = s.idEstado\n    UNION\n    SELECT u.idUsuario, u.username, u.img_url, 'NO-FRIENDS'\n    FROM Usuario u\n    WHERE u.idUsuario <> ").concat(iduser, "\n    AND u.idUsuario NOT IN (SELECT s2.idAmigo1\n                            FROM Solicitud_Amistad s2\n                            WHERE s2.idAmigo2 =").concat(iduser, ");");
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -526,10 +526,10 @@ var ApiController = /** @class */ (function () {
             var _a, imagen, texto, idUser, nombrei, buff, params;
             return __generator(this, function (_b) {
                 _a = req.body, imagen = _a.imagen, texto = _a.texto, idUser = _a.idUser;
-                nombrei = "posts-pictures/" + req.body.nickname + "-pp" + "-" + uuid_1.v4() + ".jpg";
+                nombrei = "posts-pictures/" + req.body.nickname + "-pp" + "-" + (0, uuid_1.v4)() + ".jpg";
                 buff = Buffer.from(imagen, "base64");
                 params = {
-                    Bucket: "p2-bucket-semi1",
+                    Bucket: creds_1.default.s3.bucketName || '',
                     Key: nombrei,
                     Body: buff,
                     ContentType: "image",

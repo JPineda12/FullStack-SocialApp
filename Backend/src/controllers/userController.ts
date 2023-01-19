@@ -6,9 +6,9 @@ import pool from "../database";
 const s3 = new AWS.S3(aws_keys.s3);
 const rek = new AWS.Rekognition(aws_keys.rekognition);
 import { v4 as uuidv4 } from "uuid";
-const cognito = new AmazonCognitoIdentity.CognitoUserPool(aws_keys.cognito);
 class UserController {
   public async loginCognito(req: Request, res: Response) {
+    const cognito = new AmazonCognitoIdentity.CognitoUserPool(aws_keys.cognito);
     var crypto = require("crypto");
     var hash = crypto
       .createHash("sha256")
@@ -40,6 +40,7 @@ class UserController {
     });
   }
   public async editProfileCognito(req: Request, res: Response) {
+    const cognito = new AmazonCognitoIdentity.CognitoUserPool(aws_keys.cognito);
     var crypto = require("crypto");
     const { username, newpassword, password, name, email, botmode, imgbase64 } =
       req.body;
@@ -171,7 +172,7 @@ class UserController {
             ".jpg";
           let buff = Buffer.from(imgbase64, "base64");
           const params = {
-            Bucket: "p2-bucket-semi1",
+            Bucket: aws_keys.s3.bucketName || '',
             Key: nombrei,
             Body: buff,
             ContentType: "image",
@@ -275,7 +276,6 @@ class UserController {
       if (result.length > 0) {
         //Buffer.from("Hello World").toString('base64')
         const imageToBase64 = require("image-to-base64");
-        console.log(result[0].img_url);
         imageToBase64(result[0].img_url) // Image URL
           .then((response: any) => {
             let imagenBD = response;
@@ -312,7 +312,9 @@ class UserController {
     }
   }
 
-  public async signup(req: Request, res: Response) {
+  public async signup(req: Request, res: Response) {  
+    const cognito = new AmazonCognitoIdentity.CognitoUserPool(aws_keys.cognito);
+
     var attributelist: any = [];
 
     var dataname = {
@@ -349,7 +351,7 @@ class UserController {
       "profile-pictures/" + req.body.nickname + "-pp" + "-" + uuidv4() + ".jpg";
     let buff = Buffer.from(req.body.imagen, "base64");
     const params = {
-      Bucket: "p2-bucket-semi1",
+      Bucket: aws_keys.s3.bucketName || '',
       Key: nombrei,
       Body: buff,
       ContentType: "image",
@@ -359,7 +361,6 @@ class UserController {
       if (err) {
         res.status(500).send(err);
       } else {
-        console.log(data.Location);
         var dataimagen = {
           Name: "custom:imagen",
           Value: data.Location + "",
@@ -385,7 +386,6 @@ class UserController {
           .createHash("sha256")
           .update(req.body.password)
           .digest("hex");
-        console.log(attributelist);
         let imagen_url = data.Location;
         cognito.signUp(
           req.body.nickname,

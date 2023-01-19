@@ -47,14 +47,14 @@ var database_1 = __importDefault(require("../database"));
 var s3 = new aws_sdk_1.default.S3(creds_1.default.s3);
 var rek = new aws_sdk_1.default.Rekognition(creds_1.default.rekognition);
 var uuid_1 = require("uuid");
-var cognito = new AmazonCognitoIdentity.CognitoUserPool(creds_1.default.cognito);
 var UserController = /** @class */ (function () {
     function UserController() {
     }
     UserController.prototype.loginCognito = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var crypto, hash, authenticationData, authenticationDetails, userData, cognitoUser;
+            var cognito, crypto, hash, authenticationData, authenticationDetails, userData, cognitoUser;
             return __generator(this, function (_a) {
+                cognito = new AmazonCognitoIdentity.CognitoUserPool(creds_1.default.cognito);
                 crypto = require("crypto");
                 hash = crypto
                     .createHash("sha256")
@@ -87,8 +87,9 @@ var UserController = /** @class */ (function () {
     };
     UserController.prototype.editProfileCognito = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var crypto, _a, username, newpassword, password, name, email, botmode, imgbase64, hashOriginal, authenticationData, authenticationDetails, userData, cognitoUser;
+            var cognito, crypto, _a, username, newpassword, password, name, email, botmode, imgbase64, hashOriginal, authenticationData, authenticationDetails, userData, cognitoUser;
             return __generator(this, function (_b) {
+                cognito = new AmazonCognitoIdentity.CognitoUserPool(creds_1.default.cognito);
                 crypto = require("crypto");
                 _a = req.body, username = _a.username, newpassword = _a.newpassword, password = _a.password, name = _a.name, email = _a.email, botmode = _a.botmode, imgbase64 = _a.imgbase64;
                 hashOriginal = crypto
@@ -222,11 +223,11 @@ var UserController = /** @class */ (function () {
                                 req.body.nickname +
                                 "-pp" +
                                 "-" +
-                                uuid_1.v4() +
+                                (0, uuid_1.v4)() +
                                 ".jpg";
                             var buff = Buffer.from(imgbase64, "base64");
                             var params = {
-                                Bucket: "p2-bucket-semi1",
+                                Bucket: creds_1.default.s3.bucketName || '',
                                 Key: nombrei,
                                 Body: buff,
                                 ContentType: "image",
@@ -358,7 +359,6 @@ var UserController = /** @class */ (function () {
                         result_1 = _b.sent();
                         if (result_1.length > 0) {
                             imageToBase64 = require("image-to-base64");
-                            console.log(result_1[0].img_url);
                             imageToBase64(result_1[0].img_url) // Image URL
                                 .then(function (response) {
                                 var imagenBD = response;
@@ -404,8 +404,9 @@ var UserController = /** @class */ (function () {
     };
     UserController.prototype.signup = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var attributelist, dataname, attributename, dataemail, attributeemail, datanick, attributenick, nombrei, buff, params;
+            var cognito, attributelist, dataname, attributename, dataemail, attributeemail, datanick, attributenick, nombrei, buff, params;
             return __generator(this, function (_a) {
+                cognito = new AmazonCognitoIdentity.CognitoUserPool(creds_1.default.cognito);
                 attributelist = [];
                 dataname = {
                     Name: "name",
@@ -425,10 +426,10 @@ var UserController = /** @class */ (function () {
                 };
                 attributenick = new AmazonCognitoIdentity.CognitoUserAttribute(datanick);
                 attributelist.push(attributenick);
-                nombrei = "profile-pictures/" + req.body.nickname + "-pp" + "-" + uuid_1.v4() + ".jpg";
+                nombrei = "profile-pictures/" + req.body.nickname + "-pp" + "-" + (0, uuid_1.v4)() + ".jpg";
                 buff = Buffer.from(req.body.imagen, "base64");
                 params = {
-                    Bucket: "p2-bucket-semi1",
+                    Bucket: creds_1.default.s3.bucketName || '',
                     Key: nombrei,
                     Body: buff,
                     ContentType: "image",
@@ -440,7 +441,6 @@ var UserController = /** @class */ (function () {
                         res.status(500).send(err);
                     }
                     else {
-                        console.log(data.Location);
                         var dataimagen = {
                             Name: "custom:imagen",
                             Value: data.Location + "",
@@ -458,7 +458,6 @@ var UserController = /** @class */ (function () {
                             .createHash("sha256")
                             .update(req.body.password)
                             .digest("hex");
-                        console.log(attributelist);
                         var imagen_url_1 = data.Location;
                         cognito.signUp(req.body.nickname, hash + "D**", attributelist, null, function (err, data) { return __awaiter(_this, void 0, void 0, function () {
                             var sql, result, err_6;
