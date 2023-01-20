@@ -376,6 +376,7 @@ var UserController = /** @class */ (function () {
                                     if (err) {
                                         res.json({ mensaje: err });
                                         console.log("------------- ERROR ------------ ");
+                                        console.log(err);
                                     }
                                     else {
                                         res.json({ Comparacion: data.FaceMatches, usuario: result_1 });

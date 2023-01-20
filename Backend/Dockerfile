@@ -8,7 +8,4 @@ RUN npm install
 
 COPY ./build /app
 
-
-EXPOSE 443
-
 CMD node ./index.js

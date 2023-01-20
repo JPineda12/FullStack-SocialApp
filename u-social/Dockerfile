@@ -1,17 +1,13 @@
-FROM node:14
-
-# hacer la carpeta 'app' el directorio de trabajo actual
+# build stage
+FROM node:lts-alpine as build-stage
 WORKDIR /app
-
-# copiar 'package.json' y 'package-lock.json' (si están disponibles)
 COPY package*.json ./
-
-# instalar dependencias del proyecto
 RUN npm install
-
-# copiar los archivos y carpetas del proyecto al directorio de trabajo actual (es decir, la carpeta 'app')
 COPY . .
+RUN npm run build
 
-
-EXPOSE 8080
-CMD npm run serve
+# production stage
+FROM nginx:stable-alpine as production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

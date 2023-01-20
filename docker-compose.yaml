@@ -5,12 +5,19 @@ services:
       container_name: frontend
       build: ./u-social
       ports: 
-          - '443:8080'
+          - '8080:8080'
+      networks:
+          - "u-social-app"
     
   backend: 
     container_name: backend
     build: ./Backend
+    env_file:
+      - .env
     expose:
-      - "443"
+      - "3010"
     ports: 
-      - "443:443"
+      - "3010:3010"
+    networks:
+      - "u-social-app"
+    
