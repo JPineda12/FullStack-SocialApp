@@ -20,6 +20,7 @@ class ApiRoutes {
     this.router.get("/testusers", apiController.getTestUsers);
     this.router.get("/posts", apiController.getAllPosts);
     this.router.post("/new-post", apiController.newPost);
+    this.router.post("/detect-etiquetas", apiController.detectEtiquetas);
     this.router.post("/new-tag", apiController.newTag);
     this.router.post("/post-tags", apiController.publicacionesNTags);
 

@@ -59,8 +59,8 @@
 </template>
 
 <script>
-import { io } from "socket.io-client";
-const socket = io("http://localhost:3010");
+//import { io } from "socket.io-client";
+//const socket = io("http://localhost:3010");
 export default {
   name: "ChatWindow",
   emits: ["close"],
@@ -71,10 +71,10 @@ export default {
     this.scrollToEnd();
   },
   unmounted() {
-    socket.disconnect();
+    //socket.disconnect();
   },
   created() {
-    socket.on("chat-message", (data) => {
+    /*socket.on("chat-message", (data) => {
       let msg = {
         message: {
           idChat: data.idChat,
@@ -85,7 +85,7 @@ export default {
       };
       this.messages.push(msg);
       this.scrollToEnd();
-    });
+    });*/
   },
   props: {
     chatFriend: Object,
@@ -126,7 +126,7 @@ export default {
       };
       await this.insertNew(msg, this.messages);
       this.newMessage = "";
-      socket.emit("chat-message", msg.message);
+      //socket.emit("chat-message", msg.message);
 
       this.scrollToEnd();
     },

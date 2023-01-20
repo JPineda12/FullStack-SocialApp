@@ -123,11 +123,11 @@ export default {
 
         this.axios
           .post(
-            "https://o50llrytj3.execute-api.us-east-2.amazonaws.com/tags-p2",
+            "/detect-etiquetas",
             lambdaBody
           )
           .then(async (response) => {
-            for await (let label of response.data) {
+            for await (let label of response.data.result) {
               //BUSCAR SI YA EXISTE EL TAG EN LA BASE DE DATOS
               let idTag = -1;
               let existeTag = this.Tags.find((obj) => {
@@ -150,9 +150,7 @@ export default {
                   });
               }
             }
-
             //INSERTAR NEW POST ON PUBLICACION TABLE
-
             this.axios
               .post("/new-post", {
                 imagen: compatible_base64,
@@ -167,8 +165,8 @@ export default {
                       idTag: newTagPost.idTag,
                       idPublicacion: this.newPost.idPost,
                     })
-                    .then((resx) => {
-                      console.log("RES: ", resx);
+                    .then(() => {
+                      
                     });
                 }
                 this.$emit("posted", this.newPost);

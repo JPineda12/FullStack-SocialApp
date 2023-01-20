@@ -58,7 +58,6 @@ export default {
           text: this.Post.text,
         };
         this.axios.post("/translate", translateBody).then((response) => {
-          console.log("RESPONSE: ", response);
           this.translateText = "Original Text";
           this.translated = true;
           this.originalText = response.data.message.TranslatedText;

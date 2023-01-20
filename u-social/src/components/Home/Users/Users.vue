@@ -110,14 +110,12 @@ export default {
       this.axios
         .get(`/requests/${this.User.idUsuario}`)
         .then((response) => {
-          console.log(response);
-
-          for (let i = 0; i < response.data.length; i++) {
+          for (let i = 0; i < response.data[0].length; i++) {
             let us = {
-              idUsuario: response.data[i].idUsuario,
-              nombre: response.data[i].username,
+              idUsuario: response.data[0][i].idUsuario,
+              nombre: response.data[0][i].username,
               //response.data[i].img_url,
-              imagen_url:response.data[i].img_url,
+              imagen_url:response.data[0][i].img_url,
             };
             this.Requests.push(us);
           }
@@ -130,23 +128,23 @@ export default {
       this.axios
         .get(`/users/${this.User.idUsuario}`)
         .then((response) => {
-          for (let i = 0; i < response.data.length; i++) {
+          for (let i = 0; i < response.data[0].length; i++) {
             let existeUser = this.Users.find((obj) => {
               // Returns the object where
               // the given property has some value
-              return obj.nombre.toLowerCase() === response.data[i].username;
+              return obj.nombre.toLowerCase() === response.data[0][i].username;
             });
             if (existeUser === null || existeUser === undefined) {
               let us = {
-                idUsuario: response.data[i].idUsuario,
-                nombre: response.data[i].username,
+                idUsuario: response.data[0][i].idUsuario,
+                nombre: response.data[0][i].username,
                 buttonText: "Add Friend",
                 isSent: false,
                 //response.data[i].img_url,
                 imagen_url:
-                  response.data[i].img_url,
+                  response.data[0][i].img_url,
               };
-              if (response.data[i].estado.toUpperCase() === "PENDIENTE") {
+              if (response.data[0][i].estado.toUpperCase() === "PENDIENTE") {
                 us.buttonText = "Request Sent";
                 us.isSent = true;
                 this.Users.push(us);

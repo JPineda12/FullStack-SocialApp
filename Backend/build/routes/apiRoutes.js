@@ -19,6 +19,7 @@ var ApiRoutes = /** @class */ (function () {
         this.router.get("/testusers", apiController_1.apiController.getTestUsers);
         this.router.get("/posts", apiController_1.apiController.getAllPosts);
         this.router.post("/new-post", apiController_1.apiController.newPost);
+        this.router.post("/detect-etiquetas", apiController_1.apiController.detectEtiquetas);
         this.router.post("/new-tag", apiController_1.apiController.newTag);
         this.router.post("/post-tags", apiController_1.apiController.publicacionesNTags);
         this.router.get("/friends/:iduser", apiController_1.apiController.getAllFriends);

@@ -141,7 +141,7 @@ var UserController = /** @class */ (function () {
                                                     if (err) {
                                                         res.json(err);
                                                     }
-                                                    sql = "UPDATE Usuario SET nombre = ?, botmode = ?\n                WHERE username=?";
+                                                    sql = "CALL updateUser(?,?,?)";
                                                     _a.label = 1;
                                                 case 1:
                                                     _a.trys.push([1, 3, , 4]);
@@ -188,7 +188,7 @@ var UserController = /** @class */ (function () {
                                                         if (err) {
                                                             res.json(err);
                                                         }
-                                                        sql = "UPDATE Usuario SET nombre = ?, botmode = ?\n                    WHERE username=?";
+                                                        sql = "CALL updateUser(?,?,?)";
                                                         _a.label = 1;
                                                     case 1:
                                                         _a.trys.push([1, 3, , 4]);

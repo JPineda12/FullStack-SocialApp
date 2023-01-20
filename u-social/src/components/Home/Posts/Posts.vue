@@ -69,9 +69,10 @@ export default {
       }
     },
     newPost(post) {
-      console.log(post);
+      console.log("new: ",post);
       this.getTags();
       this.getPosts();
+      this.FilteredPosts = this.Posts;      
     },
     getPosts() {
       this.Posts = [];

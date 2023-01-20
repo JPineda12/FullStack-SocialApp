@@ -50,11 +50,11 @@ export default {
       this.axios
         .get(`/friends/${this.user.idUsuario}`)
         .then((response) => {
-          for (let i = 0; i < response.data.length; i++) {
+          for (let i = 0; i < response.data[0].length; i++) {
             let us = {
-              idUsuario: response.data[i].idUsuario,
-              nombre: response.data[i].username,
-              imagen_url: response.data[i].img_url,
+              idUsuario: response.data[0][i].idUsuario,
+              nombre: response.data[0][i].username,
+              imagen_url: response.data[0][i].img_url,
               //"https://www.naruto-guides.com/wp-content/uploads/2019/05/sakura-haruno.jpg",
             };
             this.Friends.push(us);

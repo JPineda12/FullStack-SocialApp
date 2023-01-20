@@ -26,10 +26,7 @@ class ApiController {
 
   public async sendRequest(req: Request, res: Response) {
     const { idAmigo1, idAmigo2 } = req.body;
-    let sql0 = `UPDATE Solicitud_Amistad 
-    SET idEstado = 3
-    WHERE idAmigo1 = ?
-    AND idAmigo2 = ?`;
+    let sql0 = `CALL sendFriendRequest(?, ?)`;
     const result0 = await pool.query(sql0, [idAmigo1, idAmigo2]);
     try {
       if (result0.changedRows > 0) {
@@ -38,8 +35,7 @@ class ApiController {
           result: "Solicitud Enviada Correctamente (updated)",
         });
       } else {
-        let sql = `INSERT INTO Solicitud_Amistad(idAmigo1, idAmigo2, idEstado)
-        VALUES(?,?, 3)`;
+        let sql = `CALL insertNewFriendRequest(?,?)`;
         try {
           const result = await pool.query(sql, [idAmigo1, idAmigo2]);
           res.status(200).json({
@@ -58,16 +54,10 @@ class ApiController {
   }
   public async sendRequest_Again(req: Request, res: Response) {
     const { idAmigo1, idAmigo2 } = req.body;
-    let sql = `UPDATE Solicitud_Amistad 
-    SET idEstado = 3
-    WHERE idAmigo1 = ?
-    AND idAmigo2 = ?`;
+    let sql = `CALL sendFriendRequest(?, ?);`;
     try {
       const result = await pool.query(sql, [idAmigo1, idAmigo2]);
-      let sql2 = `UPDATE Solicitud_Amistad 
-      SET idEstado = 3
-      WHERE idAmigo1 = ?
-      AND idAmigo2 = ?`;
+      let sql2 = `CALL sendFriendRequesT(?, ?);`;
       try {
         //Send idAmigo2 first and then idAmigo1 :)
         const result2 = await pool.query(sql2, [idAmigo2, idAmigo1]);
@@ -92,16 +82,10 @@ class ApiController {
   }
   public async confirmRequest(req: Request, res: Response) {
     const { idAmigo1, idAmigo2 } = req.body;
-    let sql = `UPDATE Solicitud_Amistad 
-    SET idEstado = 1
-    WHERE idAmigo1 = ?
-    AND idAmigo2 = ?`;
+    let sql = `CALL confirmFriendRequest(?,?);`;
     try {
       const result = await pool.query(sql, [idAmigo1, idAmigo2]);
-      let sql2 = `UPDATE Solicitud_Amistad 
-      SET idEstado = 1
-      WHERE idAmigo1 = ?
-      AND idAmigo2 = ?`;
+      let sql2 = `CALL confirmFriendRequest(?,?);`;
       /*
        */
       try {
@@ -113,8 +97,7 @@ class ApiController {
             result: "Solicitud Aceptada Correctamente",
           });
         } else {
-          let sql3 = `INSERT INTO Solicitud_Amistad(idAmigo1, idAmigo2, idEstado)
-          VALUES(?,?,1)`;
+          let sql3 = `CALL confirmNewFriendRequest(?,?)`;
           try {
             const result3 = await pool.query(sql3, [idAmigo2, idAmigo1]);
             res.status(200).json({
@@ -147,14 +130,10 @@ class ApiController {
   }
   public async rejectRequest(req: Request, res: Response) {
     const { idAmigo1, idAmigo2 } = req.body;
-    let sql = `UPDATE Solicitud_Amistad 
-    SET idEstado = 2
-    WHERE idAmigo1 = ?
-    AND idAmigo2 = ?`;
+    let sql = `CALL rejectFriendRequest(?,?)`;
     try {
       const result = await pool.query(sql, [idAmigo1, idAmigo2]);
-      let sql2 = `INSERT INTO Solicitud_Amistad(idAmigo1, idAmigo2, idEstado)
-      VALUES(?,?,2)`;
+      let sql2 = `CALL rejectNewFriendRequest(?,?)`;
       try {
         //Send idAmigo2 first and then idAmigo1 :)
         const result2 = await pool.query(sql2, [idAmigo2, idAmigo1]);
@@ -194,11 +173,7 @@ class ApiController {
 
   public async getAllFriends(req: Request, res: Response) {
     const iduser = req.params.iduser;
-    let sql = `SELECT u.idUsuario, u.username, u.img_url 
-    FROM Usuario u, Solicitud_Amistad s
-    WHERE s.idAmigo1 = ?
-    AND s.idEstado = 1
-    AND s.idAmigo2 = u.idUsuario`;
+    let sql = `CALL getAllFriends(?)`;
     try {
       const result = await pool.query(sql, [iduser]);
       if (result.length > 0) {
@@ -213,19 +188,7 @@ class ApiController {
   }
   public async getAllExceptFriends(req: Request, res: Response) {
     const iduser = req.params.iduser;
-    let sql = `SELECT u.idUsuario, u.username, u.img_url, e.estado
-    FROM Usuario u, Solicitud_Amistad s, Estado_Amistad e
-    WHERE s.idAmigo1 = ${iduser}
-    AND s.idEstado <> 1
-    AND s.idAmigo2 = u.idUsuario
-    AND e.idEstadoAmistad = s.idEstado
-    UNION
-    SELECT u.idUsuario, u.username, u.img_url, 'NO-FRIENDS'
-    FROM Usuario u
-    WHERE u.idUsuario <> ${iduser}
-    AND u.idUsuario NOT IN (SELECT s2.idAmigo1
-                            FROM Solicitud_Amistad s2
-                            WHERE s2.idAmigo2 =${iduser});`;
+    let sql = `CALL getNoFriends(?);`;
     try {
       const result = await pool.query(sql, [iduser]);
       if (result.length > 0) {
@@ -240,11 +203,7 @@ class ApiController {
   }
   public async getAllFriendRequests(req: Request, res: Response) {
     const iduser = req.params.iduser;
-    let sql = `SELECT u.idUsuario, u.username, u.img_url 
-    FROM Usuario u, Solicitud_Amistad s
-    WHERE s.idAmigo2 = ?
-    AND s.idEstado = 3
-    AND s.idAmigo1 = u.idUsuario`;
+    let sql = `CALL getFriendsRequests(?);`;
     try {
       const result = await pool.query(sql, [iduser]);
       if (result.length > 0) {
@@ -376,6 +335,33 @@ class ApiController {
       res
         .status(200)
         .json({ status: true, result: "Relacion Tag-Publicacion ingresada" });
+    } catch (err) {
+      res.status(200).json({ status: false, result: "Ocurrio un error" });
+      console.log("ERROR: " + err);
+    }
+  }
+
+  public async detectEtiquetas(req: Request, res: Response) {
+    const { imagen } = req.body;
+    const rek = new AWS.Rekognition(aws_keys.rekognition);
+    var params = {
+      /* S3Object: {
+        Bucket: "mybucket", 
+        Name: "mysourceimage"
+      }*/
+      Image: {
+        Bytes: Buffer.from(imagen, 'base64')
+      },
+      MaxLabels: 123
+    };
+
+    try {
+      rek.detectLabels(params, function (err, data) {
+        if (err) { res.json({ mensaje: "Error" }) }
+        else {
+          res.json({ status: true, result: data.Labels});
+        }
+      });
     } catch (err) {
       res.status(200).json({ status: false, result: "Ocurrio un error" });
       console.log("ERROR: " + err);

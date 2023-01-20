@@ -79,7 +79,7 @@ var ApiController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, idAmigo1 = _a.idAmigo1, idAmigo2 = _a.idAmigo2;
-                        sql0 = "UPDATE Solicitud_Amistad \n    SET idEstado = 3\n    WHERE idAmigo1 = ?\n    AND idAmigo2 = ?";
+                        sql0 = "CALL sendFriendRequest(?, ?)";
                         return [4 /*yield*/, database_1.default.query(sql0, [idAmigo1, idAmigo2])];
                     case 1:
                         result0 = _b.sent();
@@ -93,7 +93,7 @@ var ApiController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 7];
                     case 3:
-                        sql = "INSERT INTO Solicitud_Amistad(idAmigo1, idAmigo2, idEstado)\n        VALUES(?,?, 3)";
+                        sql = "CALL insertNewFriendRequest(?,?)";
                         _b.label = 4;
                     case 4:
                         _b.trys.push([4, 6, , 7]);
@@ -128,14 +128,14 @@ var ApiController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, idAmigo1 = _a.idAmigo1, idAmigo2 = _a.idAmigo2;
-                        sql = "UPDATE Solicitud_Amistad \n    SET idEstado = 3\n    WHERE idAmigo1 = ?\n    AND idAmigo2 = ?";
+                        sql = "CALL sendFriendRequest(?, ?);";
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 7, , 8]);
                         return [4 /*yield*/, database_1.default.query(sql, [idAmigo1, idAmigo2])];
                     case 2:
                         result = _b.sent();
-                        sql2 = "UPDATE Solicitud_Amistad \n      SET idEstado = 3\n      WHERE idAmigo1 = ?\n      AND idAmigo2 = ?";
+                        sql2 = "CALL sendFriendRequesT(?, ?);";
                         _b.label = 3;
                     case 3:
                         _b.trys.push([3, 5, , 6]);
@@ -176,14 +176,14 @@ var ApiController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, idAmigo1 = _a.idAmigo1, idAmigo2 = _a.idAmigo2;
-                        sql = "UPDATE Solicitud_Amistad \n    SET idEstado = 1\n    WHERE idAmigo1 = ?\n    AND idAmigo2 = ?";
+                        sql = "CALL confirmFriendRequest(?,?);";
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 12, , 13]);
                         return [4 /*yield*/, database_1.default.query(sql, [idAmigo1, idAmigo2])];
                     case 2:
                         result = _b.sent();
-                        sql2 = "UPDATE Solicitud_Amistad \n      SET idEstado = 1\n      WHERE idAmigo1 = ?\n      AND idAmigo2 = ?";
+                        sql2 = "CALL confirmFriendRequest(?,?);";
                         _b.label = 3;
                     case 3:
                         _b.trys.push([3, 10, , 11]);
@@ -197,7 +197,7 @@ var ApiController = /** @class */ (function () {
                         });
                         return [3 /*break*/, 9];
                     case 5:
-                        sql3 = "INSERT INTO Solicitud_Amistad(idAmigo1, idAmigo2, idEstado)\n          VALUES(?,?,1)";
+                        sql3 = "CALL confirmNewFriendRequest(?,?)";
                         _b.label = 6;
                     case 6:
                         _b.trys.push([6, 8, , 9]);
@@ -247,14 +247,14 @@ var ApiController = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = req.body, idAmigo1 = _a.idAmigo1, idAmigo2 = _a.idAmigo2;
-                        sql = "UPDATE Solicitud_Amistad \n    SET idEstado = 2\n    WHERE idAmigo1 = ?\n    AND idAmigo2 = ?";
+                        sql = "CALL rejectFriendRequest(?,?)";
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 7, , 8]);
                         return [4 /*yield*/, database_1.default.query(sql, [idAmigo1, idAmigo2])];
                     case 2:
                         result = _b.sent();
-                        sql2 = "INSERT INTO Solicitud_Amistad(idAmigo1, idAmigo2, idEstado)\n      VALUES(?,?,2)";
+                        sql2 = "CALL rejectNewFriendRequest(?,?)";
                         _b.label = 3;
                     case 3:
                         _b.trys.push([3, 5, , 6]);
@@ -325,7 +325,7 @@ var ApiController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         iduser = req.params.iduser;
-                        sql = "SELECT u.idUsuario, u.username, u.img_url \n    FROM Usuario u, Solicitud_Amistad s\n    WHERE s.idAmigo1 = ?\n    AND s.idEstado = 1\n    AND s.idAmigo2 = u.idUsuario";
+                        sql = "CALL getAllFriends(?)";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -356,7 +356,7 @@ var ApiController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         iduser = req.params.iduser;
-                        sql = "SELECT u.idUsuario, u.username, u.img_url, e.estado\n    FROM Usuario u, Solicitud_Amistad s, Estado_Amistad e\n    WHERE s.idAmigo1 = ".concat(iduser, "\n    AND s.idEstado <> 1\n    AND s.idAmigo2 = u.idUsuario\n    AND e.idEstadoAmistad = s.idEstado\n    UNION\n    SELECT u.idUsuario, u.username, u.img_url, 'NO-FRIENDS'\n    FROM Usuario u\n    WHERE u.idUsuario <> ").concat(iduser, "\n    AND u.idUsuario NOT IN (SELECT s2.idAmigo1\n                            FROM Solicitud_Amistad s2\n                            WHERE s2.idAmigo2 =").concat(iduser, ");");
+                        sql = "CALL getNoFriends(?);";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -387,7 +387,7 @@ var ApiController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         iduser = req.params.iduser;
-                        sql = "SELECT u.idUsuario, u.username, u.img_url \n    FROM Usuario u, Solicitud_Amistad s\n    WHERE s.idAmigo2 = ?\n    AND s.idEstado = 3\n    AND s.idAmigo1 = u.idUsuario";
+                        sql = "CALL getFriendsRequests(?);";
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
@@ -627,6 +627,40 @@ var ApiController = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    ApiController.prototype.detectEtiquetas = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var imagen, rek, params;
+            return __generator(this, function (_a) {
+                imagen = req.body.imagen;
+                rek = new aws_sdk_1.default.Rekognition(creds_1.default.rekognition);
+                params = {
+                    /* S3Object: {
+                      Bucket: "mybucket",
+                      Name: "mysourceimage"
+                    }*/
+                    Image: {
+                        Bytes: Buffer.from(imagen, 'base64')
+                    },
+                    MaxLabels: 123
+                };
+                try {
+                    rek.detectLabels(params, function (err, data) {
+                        if (err) {
+                            res.json({ mensaje: "Error" });
+                        }
+                        else {
+                            res.json({ status: true, result: data.Labels });
+                        }
+                    });
+                }
+                catch (err) {
+                    res.status(200).json({ status: false, result: "Ocurrio un error" });
+                    console.log("ERROR: " + err);
+                }
+                return [2 /*return*/];
             });
         });
     };

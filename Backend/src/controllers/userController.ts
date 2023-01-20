@@ -102,8 +102,7 @@ class UserController {
                 if (err) {
                   res.json(err);
                 }
-                let sql = `UPDATE Usuario SET nombre = ?, botmode = ?
-                WHERE username=?`;
+                let sql = `CALL updateUser(?,?,?)`;
                 try {
                   const SQLresult = await pool.query(sql, [
                     name,
@@ -140,8 +139,7 @@ class UserController {
                     if (err) {
                       res.json(err);
                     }
-                    let sql = `UPDATE Usuario SET nombre = ?, botmode = ?
-                    WHERE username=?`;
+                    let sql = `CALL updateUser(?,?,?)`;
                     try {
                       const SQLresult = await pool.query(sql, [
                         name,
