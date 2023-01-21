@@ -7,17 +7,19 @@ services:
       ports: 
           - '8080:8080'
       networks:
-          - "u-social-app"
-    
+          - usocialapp
   backend: 
-    container_name: backend
-    build: ./Backend
-    env_file:
-      - .env
-    expose:
-      - "3010"
-    ports: 
-      - "3010:3010"
-    networks:
-      - "u-social-app"
-    
+      container_name: backend
+      build: ./Backend
+      env_file:
+        - ./Backend/.env
+      expose:
+        - "3010"
+      ports: 
+        - "3010:3010"
+      networks:
+        - usocialapp
+networks:
+  usocialapp:
+    name: usocialapp
+    driver: bridge
