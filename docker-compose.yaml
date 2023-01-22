@@ -1,25 +1,21 @@
 version: "3"
 
-services: 
-  frontend: 
-      container_name: frontend
-      build: ./u-social
-      ports: 
-          - '8080:8080'
-      networks:
-          - usocialapp
-  backend: 
+services:
+  backend:
       container_name: backend
       build: ./Backend
+      image: brest12/usocial-api
       env_file:
         - ./Backend/.env
       expose:
         - "3010"
-      ports: 
+      ports:
         - "3010:3010"
-      networks:
-        - usocialapp
-networks:
-  usocialapp:
-    name: usocialapp
-    driver: bridge
+  frontend:
+      container_name: frontend
+      build: ./u-social
+      image: brest12/usocial-ui
+      ports:
+          - '8080:8080'
+      links:
+          - backend

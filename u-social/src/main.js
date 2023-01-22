@@ -7,7 +7,7 @@ import VueAxios from "vue-axios";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
-axios.defaults.baseURL = `http://localhost:3010/api/`
+axios.defaults.baseURL = `http://backend:3010/api/`
 
 createApp(App)
     .use(router)
