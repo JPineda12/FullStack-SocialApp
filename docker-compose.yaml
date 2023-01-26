@@ -16,6 +16,4 @@ services:
       build: ./u-social
       image: brest12/usocial-ui
       ports:
-          - '8080:8080'
-      links:
-          - backend
+          - '80:80'
