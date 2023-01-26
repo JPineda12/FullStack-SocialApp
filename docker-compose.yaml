@@ -15,5 +15,7 @@ services:
       container_name: frontend
       build: ./u-social
       image: brest12/usocial-ui
+      env_file:
+        - ./u-social/.env      
       ports:
           - '80:80'
