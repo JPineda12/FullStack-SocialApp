@@ -9,13 +9,13 @@
 ## About the Project
 
 <p align="center"> 
-  <img align="center" src="doc-imgs/Home.png" />
+  <img align="center" src="doc-images/frontend/posts-page.png" />
 </p>
 
-This project was made with the goal of creating a full stack app that is connected to the cloud, and deployed 
-This webapp allows you to create users and upload files to your own database. The goal was to create/simulate a file storage app and deploy it to AWS using VPCs , EC2, S3, RDS(MySQL) and Load Balancer. You can see the assignment PDF [Here]([SEMI1]_Proyecto1_2S2021.pdf) (Spanish tho)
+This project was made with the goal of creating a full stack app that is connected to some cloud services and deployed in AWS (You can check the architecture [Here](Services%20Description%20README.md)).
 
-That being said, The version right here (latest commit) is a <em>**local**</em> version that works on your <em>**own computer**</em> 
+This webapp allows you to create users, add friends, create new posts with images, translate them from any language to spanish, filter them by tag and more!
+(This version does NOT have chat :c)
 
 ### Built With
 * Frontend: [Vue.js](https://vuejs.org)
@@ -24,80 +24,65 @@ That being said, The version right here (latest commit) is a <em>**local**</em> 
   * [NodeJS](https://nodejs.org)
   * [Express](https://expressjs.com)
 * Database: [MySQL](https://www.mysql.com)
+* Docker: [Docker](https://www.docker.com)
+* AWS: [AWS](https://aws.amazon.com/es/)
 
 
-
-> :warning: **Important**: Remember this was a college project. This App was developed in 1-2 weeks, so there's probably some not good looking Vue, JS & HTML/CSS practices. :warning:
+> :warning: **Important**: Remember this was done for learning purposes. This App was developed in 1-2 weeks, so there's probably some not good looking Vue, JS & HTML/CSS practices. :warning:
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
 ### Prerequisites
 
-* NodeJS
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+* [Docker](https://docs.docker.com/engine/install/ubuntu/)
+* [Docker compose](https://docs.docker.com/compose/)
 * MySQL 
+* AWS account
+  * Cognito user pool
+  * S3 Storage Bucket
+  * User with **S3** full access permissions
+  * User with **Rekognition** full access permissions
+  * User **Amazon Translate** full access permissions
 
 ### Installation
 
 1 Clone the repo
    ```sh
-   git clone https://github.com/JPineda12/Semi1-29-Proyecto1.git
+   git clone https://github.com/JPineda12/FullStack-SocialApp.git
    ```
-2 Go to the folder [Frontend](Frontend) and Install NPM packages
-   ```sh
-   npm install
-   ```
-3 Go to the folder [Backend](Backend) and install NPM packages
-   ```sh
-   npm install
-   ```
-4 Create the Database
-  - On your own MySQL instance run the .sql script from this repo called [scripttablas.sql](scripttablas.sql). This script includes the tables and the initial data that the app needs to work properly. You can see the database diagram [Here](doc-imgs/diagrama.svg) (Relational Model).
+2 Create the Database
+  - On your own MySQL instance run the .sql script from this repo (in Database folder) called [Database_Creation.sql](Database/1.%20Database_Creation.sql). This script contains the table definitions that the app requires, you can also check the model [here](Database/0.%20Modelo.png). You also have to run the second script which contains some initial data and stored procedures. [Procedures_n_initialdata.sql](Database/2.%20Procedures_n_initialdata.sql)
 
-5 For the backend to work you need a .env file (in the backend directory) with your own credentials, it should look like this: 
-   ```sh
-   #NodeJS Port
-      PORT=3000 #The port you want the backend to be (If you change the default (3000), you should also change it in frontend's main.js file )
-   #MySQL Credentials
-    USER_MYSQL      = yourname
-    PASSWORD_MYSQL  = yourpassword
-    HOST_MYSQL      = localhost #where your MySQL instance is hosted
-    PORT_MYSQL      = 3306  #Default port
-    DATABASE_MYSQL  = semi1_proyecto1 #Name of the database (this is the default that is created in scripttablas.sql
-    #HTTP server for files (the filed that are uploaded when you create a new user (profile picture), or upload files to your drive (imgs or PDFS)
-    FILES_SERVER_URL = "http://localhost:3030"
-   ```
-  <p align="center"> 
-  <img align="center" src="doc-imgs/env.png" />
-  </p>
+3 Now that you have the database created, you now need to configure the .env files for the backend and frontend to work. There's an .env example file for both (in backend folder and u-social folder).
+<br>
+
+In the backend you just need to put your MySQL and cloud credentials for each service. 
+In the Frontend (u-social folder) you just put the backend url, If you are gonna run it locally leave it as http://localhost:3010/api (3010 is the port you put in the backend's .env file)
 
 
 ### Usage
-1. Run Backend using:
+1. Go to the root folder, where the docker-compose.yml file is and in a terminal run:
    ```sh
-   npm run start
+   docker compose up -d 
    ```
-2. Run Frontend using:
-   ```sh
-   npm run serve
-   ```
+   
 ### The App 
 
-The frontend runs on vue default port 8080. 
+The frontend runs on http default port 80. 
 
 ```
-http://localhost:8080
+http://localhost
 ```
 #### Login
-![image](https://user-images.githubusercontent.com/39974147/171285024-2759983a-460e-4874-ab97-e52809972b28.png)
+![image](doc-images/frontend/Login.png)
 
 
-#### Home Page
-![image](doc-imgs/gif_home.gif)
+#### Post Translation
+![image](doc-images/frontend/post-translate.gif)
 
-#### File Viewing
-![image](doc-imgs/View%20File.gif)
+#### Post Filtering
+![image](doc-images/frontend/posts-filter.gif)
+
+#### Adding a Friend
+![image](doc-images/frontend/add-friend.gif)
